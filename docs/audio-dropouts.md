@@ -39,7 +39,7 @@ Tested and excluded: guest RAM (896 MB instead of 1024 MB), audio timer period 2
 - Only Mac OS X 10.4.11 is measured for this fault. Mac OS 9 passes our acceptance test; its sound was not compared before and after.
 - From Apple's published driver sources we expect the same fault on 10.1 to 10.3 and 10.5. Not measured.
 - The device cannot be migrated while this patch is in place (`unmigratable`).
-- In fullscreen SDL on a loaded host, 0 to 8 gaps of 12 to 14 ms per 2 minutes remain. The cause is open.
+- A local SDL window costs audio: on one loaded host we counted 26 gaps of 12 to 14 ms in 10 minutes in fullscreen, 36 in a window, 60 with the software renderer and 32 without vsync. Without a display there were 0, and with `-display none -vnc` there were 0 with and without a connected viewer. One run each. Which part of the SDL path causes it is open.
 - Input (recording) is not implemented.
 
 ## Reproducing the measurement
