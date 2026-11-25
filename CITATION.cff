@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "qemu-ppc-screamer"
+abstract: "Patches and build for QEMU 11.1.3 (PowerPC Mac machines mac99 and g3beige) with the Screamer (AWACS) onboard audio device, based on the screamer branch by Mark Cave-Ayland."
+authors:
+  - family-names: "Schütze"
+    given-names: "Marc"
+    affiliation: "ZKM | Center for Art and Media Karlsruhe"
+    orcid: "https://orcid.org/0009-0007-0718-4251"
+repository-code: "https://github.com/zkmkarlsruhe/qemu-ppc-screamer"
+url: "https://github.com/zkmkarlsruhe/qemu-ppc-screamer"
+license: GPL-2.0-only
+version: "11.1.3-zkm5"
+references:
+  - type: software
+    title: "QEMU, branch screamer-v10.2.0"
+    authors:
+      - family-names: "Cave-Ayland"
+        given-names: "Mark"
+    repository-code: "https://github.com/mcayland/qemu"
+keywords:
+  - "qemu"
+  - "powerpc"
+  - "screamer"
+  - "mac os"
+  - "software preservation"
