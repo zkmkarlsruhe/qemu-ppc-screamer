@@ -39,8 +39,22 @@ Tested and excluded: guest RAM (896 MB instead of 1024 MB), audio timer period 2
 - Only Mac OS X 10.4.11 is measured for this fault. Mac OS 9 passes our acceptance test; its sound was not compared before and after.
 - From Apple's published driver sources we expect the same fault on 10.1 to 10.3 and 10.5. Not measured.
 - The device cannot be migrated while this patch is in place (`unmigratable`).
-- A local SDL window costs audio: on one loaded host we counted 26 gaps of 12 to 14 ms in 10 minutes in fullscreen, 36 in a window, 60 with the software renderer and 32 without vsync. Without a display there were 0, and with `-display none -vnc` there were 0 with and without a connected viewer. One run each. Which part of the SDL path causes it is open.
+- A local SDL window costs audio, see below. Use `-display none -vnc 127.0.0.1:77` and a separate viewer (`remote-viewer --kiosk --full-screen vnc://127.0.0.1:5977`).
 - Input (recording) is not implemented.
+
+## SDL window
+Same program, 10 minutes each, loaded host (load 8 to 9), software rendered X display:
+
+| Display | Gaps |
+|---|---|
+| SDL, fullscreen / window / software renderer / without vsync | 26 / 36 / 60 / 32 |
+| SDL fullscreen with call timing | 33 |
+| SDL, window presented once per refresh (test D, two runs) | 3 and 10 |
+| as D, and the BQL dropped while presenting (test E, two runs) | 1 and 1 |
+| no display | 0 |
+| VNC without / with a viewer (TigerVNC, remote-viewer) | 0 / 0 and 0 |
+
+QEMU presents the window in the main loop with the BQL held. In the timed run 94 % of the gaps had an `SDL_RenderPresent` of more than 3 ms close by; with a random time offset it was 21 %. The offset was fitted. Test D cut the number of presentations by about 4 % only, so why it helps is open. The test patches are not in the build: dropping the BQL while presenting is not safe for display devices that update the surface from another thread.
 
 ## Reproducing the measurement
 Record the host sink for 120 s. `tools/gaps.py` counts runs of exact zeros of 1 to 350 ms with signal above -50 dBFS in the 5 ms on both sides. It divides the gap time by the audible time plus gap time. For the cause: take the position of each gap end modulo a candidate burst size and compute the circular mean length; random positions give at most 0.19.

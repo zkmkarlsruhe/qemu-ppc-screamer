@@ -46,6 +46,8 @@ Then, with a disk image `disk.qcow2` that holds an installed Mac OS:
   -device VGA -vga none -prom-env 'vga-ndrv?=true' -drive file=disk.qcow2,format=qcow2
 ```
 
+For an exhibition run QEMU without a window, `-display none -vnc 127.0.0.1:77`, and show it with `remote-viewer --kiosk --full-screen vnc://127.0.0.1:5977` (package `virt-viewer`). A local SDL window costs audio, see [docs/audio-dropouts.md](docs/audio-dropouts.md). The VNC port has no password, so keep it on loopback.
+
 `-global screamer.audiodev=` is required: QEMU no longer falls back to the first audio device. The PipeWire backend (`-audiodev pipewire,id=audio1`) is compiled in too. Mac OS X keeps the hardware clock in UTC, which is the QEMU default (`-rtc base=utc`); for Mac OS 9, which expects local time, add `-rtc base=localtime`.
 
 ## Measure
